@@ -67,7 +67,7 @@ def import_data():
         writer_data, writers_names = get_writer_data(writer, writers)
         movie_id = movie[0]
         actor_data, actors_names = get_actor_data(movie_id)
-        rating = float(movie[1]) if movie[1] and not isinstance(movie[1], str) else None
+        rating = float(movie[1]) if movie[1] and isinstance(movie[1], str) else None
         movie_body = dict(id=movie_id, imdb_rating=rating, genre=movie[2], title=movie[3], description=movie[4],
                           director=movie[5], actors_names=actors_names, writers_names=writers_names, actors=actor_data,
                           writers=writer_data)
