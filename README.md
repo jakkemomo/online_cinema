@@ -1,4 +1,4 @@
 # Online Cinema  
 ## course: Yandex Praktikum    
-First stage: ETL  
-Second stage: Flask API  
+First stage: ETL from Sqlite to Elasticsearch
+Second stage: Flask API to communicate with Elasticsearch
