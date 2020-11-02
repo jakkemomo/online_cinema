@@ -30,9 +30,8 @@ def fix_database():
 def create_new_movie(index, id, body):
     """
     Создает новый документ в рамках индекса. Возвращает 409, если документ с таким айди уже существует.
-    Создание фильма в Elascticsearch.
-    :param index: Индекс для записи в ES
-    :param body: Тело запроса с данными фильма
+    :param index: Индекс для записи в ES.
+    :param body: Тело запроса с данными фильма.
     """
     try:
         es.create(index=index, id=id, body=body, doc_type=None, params=None, headers=None)

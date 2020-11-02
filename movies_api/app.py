@@ -9,8 +9,8 @@ app = Flask("movies_service")
 @app.route("/api/movies/<movie_id>", methods=["GET"])
 def movie_details(movie_id: str) -> str:
     """
-    :param movie_id: идентификатор фильма
-    :return: данные из ES о фильме
+    :param movie_id: идентификатор фильма.
+    :return: данные из ES о фильме.
     """
     url = f"http://127.0.0.1:9200/movies/_doc/{movie_id}"
     response = requests.get(url)
@@ -37,14 +37,15 @@ def movie_details(movie_id: str) -> str:
 @app.route("/api/movies", methods=["GET"], strict_slashes=False)
 def movies_list() -> str:
     """
-    :return: данные из ES об отфильтрованном по request.args списке фильмов
+    :return: данные из ES об отфильтрованном по request.args списке фильмов.
     """
     try:
-        search: str = request.args.get("search", "")
-        limit: int = int(request.args.get("limit", 50))
-        page: int = int(request.args.get("page", 1))
-        sort: str = request.args.get("sort", "id")
-        sort_order: str = request.args.get("sort_order", "asc")
+        args = request.args
+        search: str = args.get("search", "")
+        limit: int = int(args.get("limit", 50))
+        page: int = int(args.get("page", 1))
+        sort: str = args.get("sort", "id")
+        sort_order: str = args.get("sort_order", "asc")
         if limit <= 0 or page <= 0 or sort_order not in ["asc", "desc"] or sort not in ["title", "imdb_rating", "id"]:
             raise Exception
     except Exception:
