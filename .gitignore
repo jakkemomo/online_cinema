@@ -1,4 +1,4 @@
 .idea/
 *.sqlite
 venv/
-.env
+*.env
