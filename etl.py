@@ -27,14 +27,15 @@ def fix_database():
     conn.commit()
 
 
-def create_new_movie(index, body):
+def create_new_movie(index, id, body):
     """
+    Создает новый документ в рамках индекса. Возвращает 409, если документ с таким айди уже существует.
     Создание фильма в Elascticsearch.
     :param index: Индекс для записи в ES
     :param body: Тело запроса с данными фильма
     """
     try:
-        es.create(index=index, body=body, doc_type=None, params=None, headers=None)
+        es.create(index=index, id=id, body=body, doc_type=None, params=None, headers=None)
     except Exception as e:
         logging.info(e)
 
@@ -105,7 +106,7 @@ def import_data():
                           writers_names=writers_names,
                           actors=actor_data,
                           writers=writer_data)
-        create_new_movie(index="movies", body=movie_body)
+        create_new_movie(index="movies", id=movie_id, body=movie_body)
 
 
 if __name__ == "__main__":
