@@ -1,7 +1,7 @@
 import json
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 
 app = Flask("movies_service")
 
@@ -31,10 +31,7 @@ def movie_details(movie_id: str) -> str:
                     director=json_data.get("director"))
         return jsonify(data)
     else:
-        if response.status_code == 404:
-            return "Link is not found", 404
-        else:
-            return "Error", response.status_code
+        abort(response.status_code)
 
 
 @app.route("/api/movies", methods=["GET"], strict_slashes=False)
@@ -48,10 +45,11 @@ def movies_list() -> str:
         page: int = int(request.args.get("page", 1))
         sort: str = request.args.get("sort", "id")
         sort_order: str = request.args.get("sort_order", "asc")
+        if limit <= 0 or page <= 0 or sort_order not in ["asc", "desc"] or sort not in ["title", "imdb_rating", "id"]:
+            raise Exception
     except Exception:
-        return "Unprocessable Entity", 422
-    if limit <= 0 or page <= 0 or sort_order not in ["asc", "desc"] or sort not in ["title", "imdb_rating", "id"]:
-        return "Unprocessable Entity", 422
+        return abort(422)
+
     url = f"http://127.0.0.1:9200/movies/_search"
     from_value = page * limit - limit
 
@@ -89,12 +87,8 @@ def movies_list() -> str:
             source_data = result.get("_source")
             data.append(dict(id=source_data["id"], title=source_data["title"], imdb_rating=source_data["imdb_rating"]))
         return jsonify(data)
-    elif response.status_code == 400:
-        return "Invalid request body format", 400
-    elif response.status_code == 422:
-        return "Invalid request body", 400
     else:
-        return "Link not found", 404
+        abort(response.status_code)
 
 
 if __name__ == "__main__":
